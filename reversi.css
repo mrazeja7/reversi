@@ -1,11 +1,11 @@
-/* checkers.css */
+/* reversi.css */
 #game-board {
 	border: 1px solid black;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	width: 816px;
-	height: 816px;
+	height: 918px;
 }
 .reversi-square {
 	border: 1px solid black;
@@ -30,22 +30,18 @@
 	background-color: black;
 }
 
-.selected {
-	background-color: pink;
-}
-
-.selected-sq {
-	background-color: lightblue;
-}
-
-.selected-cap {
-	background-color: darkred;
-}
-
-.square.droptarget{
-	background-color:orange;
-}
-
 .possible {
 	background-color: gray;
+	cursor: pointer;
+}
+
+.pass-square {
+	border: 1px solid black;
+	width: 814px;
+	height: 100px;
+	background-color: #880000;
+	text-align: center;
+	color: white;
+	font-size: 80px;
+	cursor: pointer;
 }
