@@ -1,4 +1,6 @@
 // checkers.js
+/** Jan Mrázek */
+/** based on the HTML version of the checkers game created in CIS580. */
 
 /** The state of the game */
 var state = {
@@ -18,6 +20,13 @@ var state = {
   captures: {w: 0, b: 0}
 }
 
+/** @function checkForVictory
+  * Checks to see if a victory has been achieved
+  * (Whole board is populated and one player has more pieces on the board)
+  * @return {String} one of four values:
+  * "white wins", "black wins", "tie", or null, if neither
+  * has yet won.
+  */
 function checkForVictory() 
 {
   var whiteScore = 0;
@@ -43,12 +52,19 @@ function checkForVictory()
   return null;
 }
 
+/** @function nextTurn()
+  * Starts the next turn by flipping
+  * the "turn" and "enemy" fields of state.
+  */
 function nextTurn() {
   var tmp = state.turn;
   state.turn = state.enemy;
   state.enemy = tmp;
 }
 
+/** @function deselectAll()
+  * Removes the highlights of potential move squares.
+  */
 function deselectAll()
 {
   var allCheckers = document.querySelectorAll('.possible');
@@ -59,6 +75,14 @@ function deselectAll()
   }
 }
 
+/** @function checkHorizontalL()
+  * Checks the possibility of a valid move
+  * when going from the passed location to the left.
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
 function checkHorizontalL(x, y)
 {
   var streak = 0;
@@ -78,6 +102,14 @@ function checkHorizontalL(x, y)
   return [];
 }
 
+/** @function checkHorizontalR()
+  * Checks the possibility of a valid move
+  * when going from the passed location to the right.
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
 function checkHorizontalR(x, y)
 {
   var streak = 0;
@@ -97,6 +129,14 @@ function checkHorizontalR(x, y)
   return [];
 }
 
+/** @function checkVerticalU()
+  * Checks the possibility of a valid move
+  * when going from the passed location upwards.
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
 function checkVerticalU(x, y)
 {
   var streak = 0;
@@ -116,6 +156,14 @@ function checkVerticalU(x, y)
   return [];
 }
 
+/** @function checkVerticalD()
+  * Checks the possibility of a valid move
+  * when going from the passed location downwards.
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
 function checkVerticalD(x, y)
 {
   var streak = 0;
@@ -135,6 +183,14 @@ function checkVerticalD(x, y)
   return [];
 }
 
+/** @function checkDiagonalSE()
+  * Checks the possibility of a valid move
+  * when going from the passed location to the bottom-right (south-east).
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
 function checkDiagonalSE(x, y)
 {
   var streak = 0;
@@ -157,6 +213,14 @@ function checkDiagonalSE(x, y)
   return [];
 }
 
+/** @function checkDiagonalSW()
+  * Checks the possibility of a valid move
+  * when going from the passed location to the bottom-left (south-west).
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
 function checkDiagonalSW(x, y)
 {
   var streak = 0;
@@ -179,6 +243,14 @@ function checkDiagonalSW(x, y)
   return [];
 }
 
+/** @function checkDiagonalNE()
+  * Checks the possibility of a valid move
+  * when going from the passed location to the top-right (north-east).
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
 function checkDiagonalNE(x, y)
 {
   var streak = 0;
@@ -201,6 +273,14 @@ function checkDiagonalNE(x, y)
   return [];
 }
 
+/** @function checkDiagonalNW()
+  * Checks the possibility of a valid move
+  * when going from the passed location to the top-left (north-west).
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
 function checkDiagonalNW(x, y)
 {
   var streak = 0;
@@ -223,14 +303,24 @@ function checkDiagonalNW(x, y)
   return [];
 }
 
-function highlightMove(x, y)
+/** @function highlightSquare
+  * Highlights a square on the playing board (for visualizing the desired move).
+  * @param {integer} x - the x position of the piece
+  * @param {integer} y - the y position of the piece
+  */
+function highlightSquare(x, y)
 {
   var square = document.getElementById('square-' + x + "-" + y);
   square.classList.add('possible');
 }
 
+/** @function highlightOnHover
+  * Highlights all squares affected by playing the hovered-over square.
+  * @param {Event} event - the event
+  */
 function highlightOnHover(event)
 {
+  event.preventDefault();
   var x = parseInt(event.target.id.charAt(7));
   var y = parseInt(event.target.id.charAt(9));
   if (isNaN(x))
@@ -240,13 +330,19 @@ function highlightOnHover(event)
   var pieces = getEnemyPieces(x, y);
 
   pieces.forEach(function(piece) {
-    highlightMove(piece.x, piece.y);
+    highlightSquare(piece.x, piece.y);
   });
 
   if (pieces.length > 0)
-    highlightMove(x, y);
+    highlightSquare(x, y);
 }
 
+/** @function getEnemyPieces
+  * Calculates all squares affected by the desired move.
+  * @param {integer} x - the x position of the piece
+  * @param {integer} y - the y position of the piece
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  */
 function getEnemyPieces(x, y)
 {
   var pieces = checkHorizontalR(x, y);
@@ -261,6 +357,11 @@ function getEnemyPieces(x, y)
   return pieces;
 }
 
+/** @function flipChecker
+  * Flips the color of the desired piece
+  * @param {integer} x - the x position of the piece
+  * @param {integer} y - the y position of the piece
+  */
 function flipChecker(x, y)
 {
   var square = document.getElementById('square-' + x + "-" + y);
@@ -270,6 +371,14 @@ function flipChecker(x, y)
   state.board[x][y] = state.turn;
 }
 
+/** @function applyMove
+  * Applies the selected move. Also checks for victory conditions
+  * and activates the next turn.
+  * @param {Event} event - needed to create a new checker
+  * in the correct square
+  * @param {integer} x - the x position of the piece
+  * @param {integer} y - the y position of the piece
+  */
 function applyMove(event, x, y)
 {
   var pieces = getEnemyPieces(x, y);
@@ -296,6 +405,11 @@ function applyMove(event, x, y)
   nextTurn();
 }
 
+/** @function handleSquareClick
+  * Parses the coordinates of the clicked square
+  * in order to prepare for applying the selected move.
+  * @param {Event} event
+  */
 function handleSquareClick(event)
 {  
   event.preventDefault();
@@ -307,12 +421,19 @@ function handleSquareClick(event)
   applyMove(event, x, y);
 }
 
+/** @function handlePassClick
+  * Handles a click on the "pass move" button.
+  * @param {Event} event
+  */
 function handlePassClick(event)
 {
   event.preventDefault();
   nextTurn();
 }
 
+/** @function setup
+  * Takes care of creating the board at the start of the game.
+  */
 function setup()
 {
   var board = document.createElement('section');
