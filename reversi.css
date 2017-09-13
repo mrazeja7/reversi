@@ -1,0 +1,51 @@
+/* checkers.css */
+#game-board {
+	border: 1px solid black;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: 816px;
+	height: 816px;
+}
+.reversi-square {
+	border: 1px solid black;
+	width: 100px;
+	height: 100px;
+	background-color: #00AA00;
+}
+
+.checker {
+	width: 90px;
+	height: 90px;
+	margin: 5px;
+	border-radius: 50%;
+	box-shadow: 8px 8px 8px #004400;
+}
+
+.checker-w {
+	background-color: ivory;
+}
+
+.checker-b {
+	background-color: black;
+}
+
+.selected {
+	background-color: pink;
+}
+
+.selected-sq {
+	background-color: lightblue;
+}
+
+.selected-cap {
+	background-color: darkred;
+}
+
+.square.droptarget{
+	background-color:orange;
+}
+
+.possible {
+	background-color: gray;
+}
