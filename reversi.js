@@ -6,6 +6,7 @@
 var state = {
   over: false,
   turn: 'b',
+  turnIndicator: null,
   enemy: 'w',
   board: [
     [null, null, null, null, null, null, null, null],
@@ -55,11 +56,14 @@ function checkForVictory()
 /** @function nextTurn()
   * Starts the next turn by flipping
   * the "turn" and "enemy" fields of state.
+  * Also flips the turn indicator.
   */
 function nextTurn() {
   var tmp = state.turn;
   state.turn = state.enemy;
   state.enemy = tmp;
+  state.turnIndicator.classList.remove('turn-indicator-' + state.enemy);
+  state.turnIndicator.classList.add('turn-indicator-' + state.turn);
 }
 
 /** @function deselectAll()
@@ -432,7 +436,8 @@ function handlePassClick(event)
 }
 
 /** @function setup
-  * Takes care of creating the board at the start of the game.
+  * Takes care of creating the board, the turn indicator
+  * and the "pass move" button at the start of the game.
   */
 function setup()
 {
@@ -458,7 +463,13 @@ function setup()
       }
       board.appendChild(square);
     }
-  }
+  }  
+
+  state.turnIndicator = document.createElement('div');
+  state.turnIndicator.id = ('turn-indicator');
+  state.turnIndicator.classList.add('turn-indicator-b');
+  board.appendChild(state.turnIndicator);
+
   var pass = document.createElement('div');
   pass.id = ('pass-square');
   pass.classList.add('pass-square');

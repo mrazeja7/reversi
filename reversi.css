@@ -37,11 +37,41 @@
 
 .pass-square {
 	border: 1px solid black;
-	width: 814px;
+	width: 406px;
 	height: 100px;
 	background-color: #880000;
 	text-align: center;
 	color: white;
 	font-size: 80px;
 	cursor: pointer;
+}
+
+.turn-indicator-w {
+	border: 1px solid black;
+	width: 406px;
+	height: 100px;
+	background-color: #FFFFFF;
+	text-align: center;
+	color: black;
+	font-size: 80px;
+	cursor: default;
+}
+
+.turn-indicator-b {
+	border: 1px solid black;
+	width: 406px;
+	height: 100px;
+	background-color: #000000;
+	text-align: center;
+	color: white;
+	font-size: 80px;
+	cursor: default;
+}
+
+.turn-indicator-b:after {
+	content: 'Black\'s turn';
+}
+
+.turn-indicator-w:after {
+	content: 'White\'s turn';
 }
