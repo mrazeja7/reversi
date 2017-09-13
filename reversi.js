@@ -62,7 +62,6 @@ function deselectAll()
 function checkHorizontalL(x, y)
 {
   var streak = 0;
-  var possible = false;
   var enemyPieces = [];
   for (var k = y-1; k >= 0; k--) 
   {
@@ -82,7 +81,6 @@ function checkHorizontalL(x, y)
 function checkHorizontalR(x, y)
 {
   var streak = 0;
-  var possible = false;
   var enemyPieces = [];
   for (var k = y+1; k < state.board.length; k++) 
   {
@@ -102,7 +100,6 @@ function checkHorizontalR(x, y)
 function checkVerticalU(x, y)
 {
   var streak = 0;
-  var possible = false;
   var enemyPieces = [];
   for (var k = x-1; k >= 0; k--) 
   {
@@ -122,7 +119,6 @@ function checkVerticalU(x, y)
 function checkVerticalD(x, y)
 {
   var streak = 0;
-  var possible = false;
   var enemyPieces = [];
   for (var k = x+1; k < state.board.length; k++) 
   {
@@ -142,7 +138,6 @@ function checkVerticalD(x, y)
 function checkDiagonalSE(x, y)
 {
   var streak = 0;
-  var possible = false;
   var l = y+1;
   var enemyPieces = [];
   for (var k = x+1; k < state.board.length; k++, l++) 
@@ -165,7 +160,6 @@ function checkDiagonalSE(x, y)
 function checkDiagonalSW(x, y)
 {
   var streak = 0;
-  var possible = false;
   var l = y-1;
   var enemyPieces = [];
   for (var k = x+1; k < state.board.length; k++, l--) 
@@ -188,7 +182,6 @@ function checkDiagonalSW(x, y)
 function checkDiagonalNE(x, y)
 {
   var streak = 0;
-  var possible = false;
   var l = y+1;
   var enemyPieces = [];
   for (var k = x-1; k >= 0; k--, l++) 
@@ -211,7 +204,6 @@ function checkDiagonalNE(x, y)
 function checkDiagonalNW(x, y)
 {
   var streak = 0;
-  var possible = false;
   var l = y-1;
   var enemyPieces = [];
   for (var k = x-1; k >= 0; k--, l--) 
