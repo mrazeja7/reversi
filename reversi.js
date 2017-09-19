@@ -25,11 +25,12 @@ var state = {
   * Checks to see if a victory has been achieved
   * (Whole board is populated and one player has more pieces on the board)
   * @return {String} one of four values:
-  * "white wins", "black wins", "tie", or null, if neither
-  * has yet won.
+  * a string containing the result of the game or null, if neither
+  * player has yet won.
   */
 function checkForVictory() 
 {
+  var gameOver = false;
   var whiteScore = 0;
   var blackScore = 0;
   for (var i = 0; i < state.board.length; i++) 
@@ -42,15 +43,37 @@ function checkForVictory()
         blackScore++;
     }
   }
-  if (whiteScore+blackScore == state.board.length*state.board.length)
+
+  var msg = 'There are no more moves to be played; ';
+
+  if (noMoreMoves())
   {
     if (whiteScore > blackScore)
-      return 'white wins';
+      return msg+'White wins!';
     else if (whiteScore < blackScore)
-      return 'black wins';
-    else return 'tie';
+      return msg+'Black wins!';
+    else return msg+'Tie!';
   }
   return null;
+}
+
+/** @function noMoreMoves()
+  * Checks if there are any more moves to be played.
+  * @returns {boolean} returns true if there are no more moves to be played.
+  */
+function noMoreMoves()
+{
+  nextTurn();
+  if (canPlay())
+  {
+    nextTurn();
+    return false;
+  }
+  else
+  {
+    nextTurn();
+    return !canPlay();
+  }
 }
 
 /** @function nextTurn()
@@ -79,234 +102,6 @@ function deselectAll()
   }
 }
 
-/** @function checkHorizontalL()
-  * Checks the possibility of a valid move
-  * when going from the passed location to the left.
-  * @param {integer} x - the x position of the new piece
-  * @param {integer} y - the y position of the new piece
-  * @returns {Array} the enemy pieces to be taken when applying this move
-  * as an array of x and y coordinates.
-  */
-function checkHorizontalL(x, y)
-{
-  var streak = 0;
-  var enemyPieces = [];
-  for (var k = y-1; k >= 0; k--) 
-  {
-    if (state.board[x][k] == state.enemy)
-    {
-      streak++;
-      enemyPieces.push({x: x, y: k});
-    }
-    if ((streak == (y-1-k)) && streak != 0 && state.board[x][k]==state.turn)
-    {
-      return enemyPieces;
-    }
-  }
-  return [];
-}
-
-/** @function checkHorizontalR()
-  * Checks the possibility of a valid move
-  * when going from the passed location to the right.
-  * @param {integer} x - the x position of the new piece
-  * @param {integer} y - the y position of the new piece
-  * @returns {Array} the enemy pieces to be taken when applying this move
-  * as an array of x and y coordinates.
-  */
-function checkHorizontalR(x, y)
-{
-  var streak = 0;
-  var enemyPieces = [];
-  for (var k = y+1; k < state.board.length; k++) 
-  {
-    if (state.board[x][k] == state.enemy)
-    {
-      streak++;
-      enemyPieces.push({x: x, y: k});
-    }
-    if ((streak == (k-y-1)) && streak != 0 && state.board[x][k]==state.turn)
-    {
-      return enemyPieces;
-    }
-  }
-  return [];
-}
-
-/** @function checkVerticalU()
-  * Checks the possibility of a valid move
-  * when going from the passed location upwards.
-  * @param {integer} x - the x position of the new piece
-  * @param {integer} y - the y position of the new piece
-  * @returns {Array} the enemy pieces to be taken when applying this move
-  * as an array of x and y coordinates.
-  */
-function checkVerticalU(x, y)
-{
-  var streak = 0;
-  var enemyPieces = [];
-  for (var k = x-1; k >= 0; k--) 
-  {
-    if (state.board[k][y] == state.enemy)
-    {
-      streak++;
-      enemyPieces.push({x: k, y: y});
-    }
-    if ((streak == (x-1-k)) && streak != 0 && state.board[k][y]==state.turn)
-    {
-      return enemyPieces;
-    }
-  }
-  return [];
-}
-
-/** @function checkVerticalD()
-  * Checks the possibility of a valid move
-  * when going from the passed location downwards.
-  * @param {integer} x - the x position of the new piece
-  * @param {integer} y - the y position of the new piece
-  * @returns {Array} the enemy pieces to be taken when applying this move
-  * as an array of x and y coordinates.
-  */
-function checkVerticalD(x, y)
-{
-  var streak = 0;
-  var enemyPieces = [];
-  for (var k = x+1; k < state.board.length; k++) 
-  {
-    if (state.board[k][y] == state.enemy)
-    {
-      streak++;
-      enemyPieces.push({x: k, y: y});
-    }
-    if ((streak == (k-x-1)) && streak != 0 && state.board[k][y]==state.turn)
-    {
-      return enemyPieces;
-    }
-  }
-  return [];
-}
-
-/** @function checkDiagonalSE()
-  * Checks the possibility of a valid move
-  * when going from the passed location to the bottom-right (south-east).
-  * @param {integer} x - the x position of the new piece
-  * @param {integer} y - the y position of the new piece
-  * @returns {Array} the enemy pieces to be taken when applying this move
-  * as an array of x and y coordinates.
-  */
-function checkDiagonalSE(x, y)
-{
-  var streak = 0;
-  var l = y+1;
-  var enemyPieces = [];
-  for (var k = x+1; k < state.board.length; k++, l++) 
-  {
-    if (l >= state.board.length)
-      break;
-    if (state.board[k][l] == state.enemy)
-    {
-      streak++;
-      enemyPieces.push({x: k, y: l});
-    }
-    if ((streak == (k-x-1)) && streak != 0 && state.board[k][l]==state.turn)
-    {
-      return enemyPieces;
-    }
-  }
-  return [];
-}
-
-/** @function checkDiagonalSW()
-  * Checks the possibility of a valid move
-  * when going from the passed location to the bottom-left (south-west).
-  * @param {integer} x - the x position of the new piece
-  * @param {integer} y - the y position of the new piece
-  * @returns {Array} the enemy pieces to be taken when applying this move
-  * as an array of x and y coordinates.
-  */
-function checkDiagonalSW(x, y)
-{
-  var streak = 0;
-  var l = y-1;
-  var enemyPieces = [];
-  for (var k = x+1; k < state.board.length; k++, l--) 
-  {
-    if (l < 0)
-      break;
-    if (state.board[k][l] == state.enemy)
-    {
-      streak++;
-      enemyPieces.push({x: k, y: l});
-    }
-    if ((streak == (k-x-1)) && streak != 0 && state.board[k][l]==state.turn)
-    {
-      return enemyPieces;
-    }
-  }
-  return [];
-}
-
-/** @function checkDiagonalNE()
-  * Checks the possibility of a valid move
-  * when going from the passed location to the top-right (north-east).
-  * @param {integer} x - the x position of the new piece
-  * @param {integer} y - the y position of the new piece
-  * @returns {Array} the enemy pieces to be taken when applying this move
-  * as an array of x and y coordinates.
-  */
-function checkDiagonalNE(x, y)
-{
-  var streak = 0;
-  var l = y+1;
-  var enemyPieces = [];
-  for (var k = x-1; k >= 0; k--, l++) 
-  {
-    if (l >= state.board.length)
-      break;
-    if (state.board[k][l] == state.enemy)
-    {
-      streak++;
-      enemyPieces.push({x: k, y: l});
-    }
-    if ((streak == (x-1-k)) && streak != 0 && state.board[k][l]==state.turn)
-    {
-      return enemyPieces;
-    }
-  }
-  return [];
-}
-
-/** @function checkDiagonalNW()
-  * Checks the possibility of a valid move
-  * when going from the passed location to the top-left (north-west).
-  * @param {integer} x - the x position of the new piece
-  * @param {integer} y - the y position of the new piece
-  * @returns {Array} the enemy pieces to be taken when applying this move
-  * as an array of x and y coordinates.
-  */
-function checkDiagonalNW(x, y)
-{
-  var streak = 0;
-  var l = y-1;
-  var enemyPieces = [];
-  for (var k = x-1; k >= 0; k--, l--) 
-  {
-    if (l < 0)
-      break;
-    if (state.board[k][l] == state.enemy)
-    {
-      streak++;
-      enemyPieces.push({x: k, y: l});
-    }
-    if ((streak == (x-1-k)) && streak != 0 && state.board[k][l]==state.turn)
-    {
-      return enemyPieces;
-    }
-  }
-  return [];
-}
-
 /** @function highlightSquare
   * Highlights a square on the playing board (for visualizing the desired move).
   * @param {integer} x - the x position of the piece
@@ -327,7 +122,7 @@ function highlightOnHover(event)
   event.preventDefault();
   var x = parseInt(event.target.id.charAt(7));
   var y = parseInt(event.target.id.charAt(9));
-  if (isNaN(x))
+  if (isNaN(x) || isNaN(y))
     return;
   if (state.board[x][y])
     return;
@@ -341,6 +136,50 @@ function highlightOnHover(event)
     highlightSquare(x, y);
 }
 
+/** @function universalCheck()
+  * Checks the possibility of a valid move
+  * when going from the passed location in the passed direction.
+  * I had 8 different functions, each of which checked one direction,
+  * before I consolidated them all into this one function.
+  * xIncrement of -1 means we go up vertically,
+  * xIncrement of 0 means no change in row,  
+  * xIncrement of 1 means we go down vertically.
+  * yIncrement of -1 means we go left horizontally,
+  * yIncrement of 0 means no change in column,  
+  * yIncrement of 1 means we go right horizontally.
+  * @param {integer} x - the x position of the new piece
+  * @param {integer} y - the y position of the new piece
+  * @param {integer} xIncrement - the proposed change in the x coordinate
+  * @param {integer} yIncrement - the proposed change in the y coordinate
+  * @returns {Array} the enemy pieces to be taken when applying this move
+  * as an array of x and y coordinates.
+  */
+function universalCheck(x, y, xIncrement, yIncrement)
+{
+  var k = x + xIncrement;
+  var l = y + yIncrement;
+  var enemyPieces = [];
+  while (k >= 0 && k < state.board.length && l >= 0 && l < state.board.length)
+  {
+    if (state.board[k][l] == state.enemy)
+    {
+      enemyPieces.push({x: k, y: l});
+    }
+    else if (state.board[k][l] == state.turn)
+    {
+      return enemyPieces;
+    }
+    else
+    {
+      return [];
+    }
+
+    k += xIncrement;
+    l += yIncrement;
+  }
+  return [];
+}
+
 /** @function getEnemyPieces
   * Calculates all squares affected by the desired move.
   * @param {integer} x - the x position of the piece
@@ -349,14 +188,14 @@ function highlightOnHover(event)
   */
 function getEnemyPieces(x, y)
 {
-  var pieces = checkHorizontalR(x, y);
-  pieces = pieces.concat(checkHorizontalL(x, y));
-  pieces = pieces.concat(checkVerticalD(x, y));
-  pieces = pieces.concat(checkVerticalU(x, y));
-  pieces = pieces.concat(checkDiagonalSE(x, y));
-  pieces = pieces.concat(checkDiagonalSW(x, y));      
-  pieces = pieces.concat(checkDiagonalNW(x, y));
-  pieces = pieces.concat(checkDiagonalNE(x, y));  
+  var pieces = universalCheck(x, y, 0, 1);
+  pieces = pieces.concat(universalCheck(x, y, 0, -1));
+  pieces = pieces.concat(universalCheck(x, y, 1, 0));
+  pieces = pieces.concat(universalCheck(x, y, -1, 0));
+  pieces = pieces.concat(universalCheck(x, y, 1, 1));
+  pieces = pieces.concat(universalCheck(x, y, 1, -1));      
+  pieces = pieces.concat(universalCheck(x, y, -1, -1));
+  pieces = pieces.concat(universalCheck(x, y, -1, 1));
 
   return pieces;
 }
@@ -405,8 +244,14 @@ function applyMove(event, x, y)
   {
     alert(vic);
     location.reload(); //play again
+    return;
   }
   nextTurn();
+
+  if (!canPlay())
+  {
+    alert((state.turn=='w'?'White':'Black') + ' has no possible moves. Please pass your turn.');
+  }
 }
 
 /** @function handleSquareClick
@@ -419,7 +264,7 @@ function handleSquareClick(event)
   event.preventDefault();
   var x = parseInt(event.target.id.charAt(7));
   var y = parseInt(event.target.id.charAt(9));
-  if (state.board[x][y] != null)
+  if (isNaN(x) || isNaN(y) || state.board[x][y] != null)
     return;
 
   applyMove(event, x, y);
@@ -433,6 +278,27 @@ function handlePassClick(event)
 {
   event.preventDefault();
   nextTurn();
+}
+
+/** @function canPlay
+  * Checks whether the current player can make any moves.
+  * Could potentially be slowing the game down, as it checks every
+  * field of the board.
+  * @returns {boolean} returns true if the current player can make a move.
+  */
+function canPlay()
+{
+  pieces = [];
+  for (var i = 0; i < state.board.length; i++)
+  {
+    for (var j = 0; j < state.board.length; j++)
+    {
+      if (state.board[i][j])
+        continue;
+      pieces = pieces.concat(getEnemyPieces(i, j));
+    }
+  }
+  return (pieces.length > 0);
 }
 
 /** @function setup
