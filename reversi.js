@@ -1,7 +1,10 @@
 // checkers.js
 /** Jan Mrázek */
 /** based on the HTML version of the checkers game created in CIS580. */
-
+// <p id = 'message'>
+// </p>
+// var t = document.getElementById('message');
+// t.textContent = 'asdf';
 /** The state of the game */
 var state = {
   over: false,
@@ -242,15 +245,17 @@ function applyMove(event, x, y)
   var vic = checkForVictory();
   if (vic)
   {
-    alert(vic);
-    location.reload(); //play again
+    //alert(vic);
+    //location.reload(); //play again
+    document.getElementById('message').textContent = vic;
     return;
   }
   nextTurn();
 
   if (!canPlay())
   {
-    alert((state.turn=='w'?'White':'Black') + ' has no possible moves. Please pass your turn.');
+    //alert((state.turn=='w'?'White':'Black') + ' has no possible moves. Please pass your turn.');
+    document.getElementById('message').textContent = ((state.turn=='w'?'White':'Black') + ' has no possible moves. Please pass your turn.');
   }
 }
 
@@ -277,6 +282,7 @@ function handleSquareClick(event)
 function handlePassClick(event)
 {
   event.preventDefault();
+  document.getElementById('message').textContent = null;
   nextTurn();
 }
 
